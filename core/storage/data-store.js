@@ -1,9 +1,10 @@
 // Enhanced data store with real-time updates
 import { EventEmitter } from '../utils/events.js';
 
-class DataStore extends EventEmitter {
+class DataStore {
   constructor() {
-    this.events = new EventEmitter();
+    this.events = new window.EventEmitter();
+    this.ready = Promise.resolve(true);
   }
 
   async init() {
@@ -128,7 +129,5 @@ class DataStore extends EventEmitter {
 
   // Additional methods...
 }
-
 // Create singleton instance
-const dataStore = new DataStore();
-export default dataStore;
+window.DataStore = new DataStore();

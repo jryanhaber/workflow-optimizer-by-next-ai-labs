@@ -1,5 +1,4 @@
-// Simple event emitter implementation
-export class EventEmitter {
+window.EventEmitter = class EventEmitter {
   constructor() {
     this.events = {};
   }
@@ -34,4 +33,4 @@ export class EventEmitter {
       listener(...args);
     });
   }
-}
+};

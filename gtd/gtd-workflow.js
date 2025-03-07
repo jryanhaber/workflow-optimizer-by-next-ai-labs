@@ -1,12 +1,19 @@
 // GTD Workflow Manager
-import dataStore from '../core/storage/data-store.js';
-import { GTD_STAGES } from '../core/storage/models.js';
+// import dataStore from '../core/storage/data-store.js';
+// import { GTD_STAGES } from '../core/storage/models.js';
 
 class GTDWorkflow {
   constructor() {
-    this.stages = GTD_STAGES;
+    this.stages = {
+      INBOX: 'inbox',
+      ACTIONABLE: 'actionable',
+      NEXT_ACTIONS: 'next-actions',
+      WAITING_FOR: 'waiting-for',
+      SOMEDAY: 'someday',
+      REFERENCE: 'reference',
+      COMPLETED: 'completed'
+    };
   }
-
   /**
    * Process an inbox item - first decision point
    * @param {WorkflowItem} item - The item to process
@@ -68,10 +75,10 @@ class GTDWorkflow {
    * @param {string} stage - The GTD stage to filter by
    */
   async getItemsByStage(stage) {
-    return dataStore.getAllItems({ gtdStage: stage });
+    return window.dataStore.getAllItems({ gtdStage: stage });
   }
 
   // Additional GTD workflow methods...
 }
 
-export default new GTDWorkflow();
+window.GTDWorkflow = new GTDWorkflow();

@@ -37,8 +37,12 @@ class TagManager {
    */
   async loadTags() {
     try {
-      // Use await to properly resolve the promise
-      this.allTags = await DataStore.getAllTags();
+      if (window?.DataStore && typeof window?.DataStore?.getAllTags === 'function') {
+        this.allTags = await window?.DataStore?.getAllTags();
+      } else {
+        console.log('DataStore.getAllTags not available, using empty tags array');
+        this.allTags = [];
+      }
     } catch (error) {
       console.error('Failed to load tags:', error);
       this.allTags = [];
