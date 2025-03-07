@@ -1,7 +1,4 @@
 // GTD Workflow Manager
-// import dataStore from '../core/storage/data-store.js';
-// import { GTD_STAGES } from '../core/storage/models.js';
-
 class GTDWorkflow {
   constructor() {
     this.stages = {
@@ -32,7 +29,7 @@ class GTDWorkflow {
       await this.showNonActionableDialog(updatedItem);
     }
 
-    return dataStore.saveItem(updatedItem);
+    return window.DataStore.saveItem(updatedItem);
   }
 
   /**
@@ -67,7 +64,7 @@ class GTDWorkflow {
         break;
     }
 
-    return dataStore.saveItem(updatedItem);
+    return window.DataStore.saveItem(updatedItem);
   }
 
   /**
@@ -75,10 +72,15 @@ class GTDWorkflow {
    * @param {string} stage - The GTD stage to filter by
    */
   async getItemsByStage(stage) {
-    return window.dataStore.getAllItems({ gtdStage: stage });
+    return window.DataStore.getAllItems({ gtdStage: stage });
   }
 
-  // Additional GTD workflow methods...
+  // Method to handle non-actionable items
+  async showNonActionableDialog(item) {
+    // This would typically show a UI, but for now just log
+    console.log('Handling non-actionable item:', item);
+    return item;
+  }
 }
 
 window.GTDWorkflow = new GTDWorkflow();

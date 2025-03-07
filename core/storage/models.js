@@ -27,7 +27,7 @@
  */
 
 // Export constants for system use
-export const GTD_STAGES = {
+window.GTD_STAGES = {
   INBOX: 'inbox',
   ACTIONABLE: 'actionable',
   NEXT_ACTIONS: 'next-actions',
@@ -37,7 +37,7 @@ export const GTD_STAGES = {
   COMPLETED: 'completed'
 };
 
-export const ITEM_TYPES = {
+window.ITEM_TYPES = {
   TODO: 'todo',
   IN_PROGRESS: 'inprogress',
   COMPLETED: 'completed',

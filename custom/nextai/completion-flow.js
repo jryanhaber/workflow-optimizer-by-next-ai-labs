@@ -1,6 +1,4 @@
 // Custom completion flow for NextAI Labs
-import dataStore from '../../core/storage/data-store.js';
-
 class CompletionFlow {
   constructor() {
     this.questions = {
@@ -75,8 +73,9 @@ class CompletionFlow {
     });
 
     // Save the updated item
-    return dataStore.saveItem(updatedItem);
+    return window.DataStore.saveItem(updatedItem);
   }
 }
 
-export default new CompletionFlow();
+// Create global instance
+window.CompletionFlow = new CompletionFlow();

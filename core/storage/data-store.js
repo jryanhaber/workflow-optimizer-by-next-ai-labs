@@ -39,16 +39,6 @@ class DataStore {
     this.ready = Promise.resolve(true);
   }
 
-  async init() {
-    // Initialize storage and load initial data
-    try {
-      return true;
-    } catch (error) {
-      console.error('DataStore initialization failed:', error);
-      return false;
-    }
-  }
-
   on(event, callback) {
     if (this.events) {
       return this.events.on(event, callback);

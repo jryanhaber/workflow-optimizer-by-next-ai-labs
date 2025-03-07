@@ -110,6 +110,21 @@ class ReviewController {
         }
       });
     });
+
+    // Add item click handling for item details
+    document.addEventListener('click', (e) => {
+      // Find closest item-card or list-item
+      const itemEl = e.target.closest('.item-card') || e.target.closest('.list-item');
+
+      // If clicked on an item but not on a button
+      if (itemEl && !e.target.closest('button')) {
+        const itemId = parseInt(itemEl.getAttribute('data-id'), 10);
+        const item = this.allItems.find((i) => i.id === itemId);
+        if (item) {
+          this.showFullscreenDetail(item);
+        }
+      }
+    });
   }
 
   async loadItems() {
@@ -280,7 +295,7 @@ class ReviewController {
         break;
 
       case 'edit':
-        this.showItemDetail(item);
+        this.showFullscreenDetail(item);
         break;
 
       case 'delete':
@@ -301,97 +316,124 @@ class ReviewController {
     }
   }
 
-  showItemDetail(item) {
-    const modal = document.getElementById('item-detail-modal');
-    if (!modal) return;
+  showFullscreenDetail(item) {
+    // Create or get full-screen detail view
+    let detailView = document.getElementById('fullscreen-detail-view');
 
-    const modalBody = modal.querySelector('.modal-body');
-    const modalTitle = modal.querySelector('#modal-title');
+    if (!detailView) {
+      detailView = document.createElement('div');
+      detailView.id = 'fullscreen-detail-view';
+      detailView.className = 'fullscreen-detail';
+      document.querySelector('.app-content').appendChild(detailView);
+    }
 
-    modalTitle.textContent = item.title || 'Item Details';
-
-    // Create detail content
-    const detailContent = `
-      <div class="detail-container">
-        <div class="detail-section">
-          <label>Screenshot</label>
+    // Content similar to modal but fullscreen
+    detailView.innerHTML = `
+      <div class="detail-header">
+        <h2>${item.title || 'Item Detail'}</h2>
+        <button class="close-detail-btn">×</button>
+      </div>
+      <div class="detail-content">
+        <div class="detail-left">
           <div class="detail-screenshot">
             <img src="${item.screenshot || ''}" alt="Screenshot">
           </div>
-        </div>
-        
-        <div class="detail-section">
-          <label>URL</label>
           <div class="detail-url">
-            <a href="${item.url || '#'}" target="_blank">${item.url || 'No URL'}</a>
+            <a href="${item.url || '#'}" target="_blank" class="open-url-btn">
+              ${item.url || 'No URL'}</a>
           </div>
         </div>
-        
-        <div class="detail-section">
-          <label for="edit-text">Description</label>
-          <textarea id="edit-text" class="detail-text">${item.text || ''}</textarea>
+        <div class="detail-right">
+          <div class="detail-section">
+            <label for="detail-text">Description</label>
+            <textarea id="detail-text" class="detail-text">${item.text || ''}</textarea>
+          </div>
+          <div class="detail-section">
+            <label for="detail-status">Status</label>
+            <select id="detail-status">
+              <option value="todo" ${item.type === 'todo' ? 'selected' : ''}>Todo</option>
+              <option value="inprogress" ${
+                item.type === 'inprogress' ? 'selected' : ''
+              }>In Progress</option>
+              <option value="waiting" ${
+                item.type === 'waiting' ? 'selected' : ''
+              }>Waiting For</option>
+              <option value="completed" ${
+                item.type === 'completed' ? 'selected' : ''
+              }>Completed</option>
+            </select>
+          </div>
+          <div class="detail-section">
+            <label>Tags</label>
+            <div id="detail-tags"></div>
+          </div>
         </div>
-        
-        <div class="detail-section">
-          <label>Status</label>
-          <select id="edit-status" class="detail-select">
-            <option value="todo" ${item.type === 'todo' ? 'selected' : ''}>Todo</option>
-            <option value="inprogress" ${
-              item.type === 'inprogress' ? 'selected' : ''
-            }>In Progress</option>
-            <option value="waiting" ${
-              item.type === 'waiting' ? 'selected' : ''
-            }>Waiting For</option>
-            <option value="completed" ${
-              item.type === 'completed' ? 'selected' : ''
-            }>Completed</option>
-          </select>
-        </div>
-        
-        <div class="detail-section">
-          <label>Tags</label>
-          <div id="edit-tags"></div>
-        </div>
-        
-        <div class="detail-actions">
-          <button id="save-item-btn" class="btn btn-primary">Save Changes</button>
-          <button id="cancel-edit-btn" class="btn">Cancel</button>
-        </div>
+      </div>
+      <div class="detail-actions">
+        <button id="save-detail-btn" class="btn btn-primary">Save Changes</button>
+        <button id="process-detail-btn" class="btn btn-process">Process (GTD)</button>
+        <button id="close-detail-btn" class="btn">Close</button>
       </div>
     `;
 
-    modalBody.innerHTML = detailContent;
-
-    // Initialize tag manager if available
+    // Tag management
     if (window.TagManager) {
-      const tagContainer = document.getElementById('edit-tags');
-      const tagManager = new TagManager(tagContainer);
+      const tagContainer = document.getElementById('detail-tags');
+      const tagManager = new window.TagManager(tagContainer);
       tagManager.setTags(item.tags || []);
-
-      // Save button handler
-      document.getElementById('save-item-btn').addEventListener('click', async () => {
-        const updatedItem = { ...item };
-        updatedItem.text = document.getElementById('edit-text').value;
-        updatedItem.type = document.getElementById('edit-status').value;
-        updatedItem.tags = tagManager.getTags();
-        updatedItem.updatedAt = new Date().toISOString();
-
-        if (window.DataStore && typeof window.DataStore.saveItem === 'function') {
-          await window.DataStore.saveItem(updatedItem);
-          await this.loadItems();
-          this.applyFilters();
-          modal.classList.add('hidden');
-        }
-      });
     }
 
-    // Cancel button handler
-    document.getElementById('cancel-edit-btn').addEventListener('click', () => {
-      modal.classList.add('hidden');
+    // Show detail view
+    detailView.classList.add('active');
+
+    // Set up event listeners
+    document.querySelector('.close-detail-btn').addEventListener('click', () => {
+      detailView.classList.remove('active');
     });
 
-    // Show the modal
-    modal.classList.remove('hidden');
+    document.getElementById('close-detail-btn').addEventListener('click', () => {
+      detailView.classList.remove('active');
+    });
+
+    document.getElementById('save-detail-btn').addEventListener('click', async () => {
+      const updatedItem = { ...item };
+      updatedItem.text = document.getElementById('detail-text').value;
+      updatedItem.type = document.getElementById('detail-status').value;
+
+      if (window.TagManager) {
+        const tagManager = new window.TagManager(document.getElementById('detail-tags'));
+        updatedItem.tags = tagManager.getTags();
+      }
+
+      if (window.DataStore && typeof window.DataStore.saveItem === 'function') {
+        await window.DataStore.saveItem(updatedItem);
+        await this.loadItems();
+        this.applyFilters();
+        detailView.classList.remove('active');
+      } else {
+        console.error('DataStore.saveItem is not available');
+        alert('Error: Could not save changes. DataStore.saveItem is not available.');
+      }
+    });
+
+    document.getElementById('process-detail-btn').addEventListener('click', () => {
+      if (window.GTDProcessor && typeof window.GTDProcessor.showProcessingDialog === 'function') {
+        window.GTDProcessor.showProcessingDialog(item);
+        detailView.classList.remove('active');
+      } else {
+        console.error('GTDProcessor.showProcessingDialog is not available');
+        alert('GTD Processing is not available');
+      }
+    });
+
+    // Make the URL button work correctly
+    const urlBtn = document.querySelector('.open-url-btn');
+    if (urlBtn && item.url) {
+      urlBtn.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent default link behavior
+        chrome.tabs.create({ url: item.url });
+      });
+    }
   }
 
   async loadTags() {

@@ -1259,3 +1259,161 @@
 .btn-process:hover {
   background: #e6f1ff !important;
 }
+/* Fullscreen detail view */
+.fullscreen-detail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+}
+
+.fullscreen-detail.active {
+  display: flex;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.close-detail-btn {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.detail-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.detail-left {
+  width: 40%;
+  padding: 16px;
+  overflow-y: auto;
+  border-right: 1px solid #e1e4e8;
+}
+
+.detail-right {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.detail-screenshot {
+  margin-bottom: 16px;
+}
+
+.detail-screenshot img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+}
+
+.detail-url {
+  word-break: break-all;
+  margin-bottom: 16px;
+  padding: 8px;
+  background: #f6f8fa;
+  border-radius: 6px;
+}
+
+.detail-url a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
+.detail-section {
+  margin-bottom: 16px;
+}
+
+.detail-section label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.detail-text {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.detail-actions {
+  padding: 16px;
+  border-top: 1px solid #e1e4e8;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.detail-actions button {
+  margin-left: 8px;
+}
+
+/* Clean up GTD menu styling */
+.gtd-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.gtd-menu-item:hover {
+  background: #f6f8fa;
+}
+
+.gtd-menu-item.active {
+  background: #f1f8ff;
+  color: #0366d6;
+}
+
+.gtd-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+.gtd-label {
+  flex: 1;
+}
+
+.gtd-count {
+  background: #f6f8fa;
+  border-radius: 10px;
+  padding: 0 8px;
+  font-size: 12px;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Process button styles */
+.btn-process {
+  background: #f1f8ff !important;
+  color: #0366d6 !important;
+  border-color: #0366d6 !important;
+}
+
+.btn-process:hover {
+  background: #e1f0ff !important;
+}

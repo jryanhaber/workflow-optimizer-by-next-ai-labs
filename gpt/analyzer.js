@@ -1,10 +1,15 @@
 // GPT analyzer for workflow items
-import { promptTemplates } from './prompt-templates/index.js';
-
 class GPTAnalyzer {
   constructor() {
     this.apiEndpoint = 'https://api.openai.com/v1/chat/completions';
     this.apiKey = null; // User will need to provide via settings
+    this.promptTemplates = {
+      categorize: (item) =>
+        `Analyze this item and suggest categories: ${item.title} - ${item.text || ''}`,
+      'suggest-tags': (item) => `Suggest tags for this item: ${item.title} - ${item.text || ''}`,
+      'next-actions': (item) =>
+        `What are possible next actions for: ${item.title} - ${item.text || ''}`
+    };
   }
 
   /**
@@ -39,7 +44,7 @@ class GPTAnalyzer {
     }
 
     // Get the appropriate prompt template
-    const promptTemplate = promptTemplates[analysisType];
+    const promptTemplate = this.promptTemplates[analysisType];
     if (!promptTemplate) {
       throw new Error(`Unknown analysis type: ${analysisType}`);
     }
@@ -95,20 +100,25 @@ class GPTAnalyzer {
     // Parse based on analysis type
     switch (analysisType) {
       case 'categorize':
-        return this.parseCategorization(content);
+        return { type: 'categories', content: content.split('\n').filter((line) => line.trim()) };
 
       case 'suggest-tags':
-        return this.parseTagSuggestions(content);
+        return {
+          type: 'tags',
+          content: content
+            .split(',')
+            .map((tag) => tag.trim())
+            .filter((tag) => tag)
+        };
 
       case 'next-actions':
-        return this.parseNextActions(content);
+        return { type: 'actions', content: content.split('\n').filter((line) => line.trim()) };
 
       default:
-        return { raw: content };
+        return { type: 'raw', content };
     }
   }
-
-  // Specific parsers for different analysis types...
 }
 
-export default new GPTAnalyzer();
+// Create global instance
+window.GPTAnalyzer = new GPTAnalyzer();

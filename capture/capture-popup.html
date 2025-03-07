@@ -55,8 +55,10 @@
       </div>
     </div>
 
+    <!-- Load scripts in correct order -->
     <script src="../utils/events.js"></script>
     <script src="../core/storage/data-store.js"></script>
+    <!-- Other scripts that depend on DataStore -->
     <script src="../components/tag-manager.js"></script>
     <script src="../capture/capture.js"></script>
     <script src="capture-popup.js"></script>

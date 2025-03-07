@@ -17,6 +17,10 @@ class GTDProcessor {
    * Show the GTD processing dialog for an inbox item
    * @param {Object} item - The item to process
    */
+  /**
+   * Show the GTD processing dialog for an inbox item
+   * @param {Object} item - The item to process
+   */
   showProcessingDialog(item) {
     const modal = document.getElementById('gtd-processing-modal');
     const contentContainer = modal.querySelector('.gtd-processing-content');
@@ -27,7 +31,6 @@ class GTDProcessor {
     // Show the modal
     modal.classList.remove('hidden');
   }
-
   /**
    * Show the "Is it actionable?" question
    */

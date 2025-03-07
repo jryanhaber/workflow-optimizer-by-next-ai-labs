@@ -70,6 +70,7 @@
                 width="16"
                 height="16"
                 viewBox="0 0 24 24"
+                viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
@@ -95,32 +96,32 @@
             <h2>GTD Workflow</h2>
             <div class="gtd-menu">
               <div class="gtd-menu-item active" data-gtd-stage="inbox">
-                <span class="gtd-icon">📥</span>
+                <span class="gtd-icon">I</span>
                 <span class="gtd-label">Inbox</span>
                 <span class="gtd-count" id="inbox-count">0</span>
               </div>
               <div class="gtd-menu-item" data-gtd-stage="next-actions">
-                <span class="gtd-icon">▶️</span>
+                <span class="gtd-icon">N</span>
                 <span class="gtd-label">Next Actions</span>
                 <span class="gtd-count" id="next-actions-count">0</span>
               </div>
               <div class="gtd-menu-item" data-gtd-stage="waiting-for">
-                <span class="gtd-icon">⏱</span>
+                <span class="gtd-icon">W</span>
                 <span class="gtd-label">Waiting For</span>
                 <span class="gtd-count" id="waiting-for-count">0</span>
               </div>
               <div class="gtd-menu-item" data-gtd-stage="someday">
-                <span class="gtd-icon">🔮</span>
+                <span class="gtd-icon">S</span>
                 <span class="gtd-label">Someday/Maybe</span>
                 <span class="gtd-count" id="someday-count">0</span>
               </div>
               <div class="gtd-menu-item" data-gtd-stage="reference">
-                <span class="gtd-icon">📚</span>
+                <span class="gtd-icon">R</span>
                 <span class="gtd-label">Reference</span>
                 <span class="gtd-count" id="reference-count">0</span>
               </div>
               <div class="gtd-menu-item" data-gtd-stage="completed">
-                <span class="gtd-icon">✅</span>
+                <span class="gtd-icon">C</span>
                 <span class="gtd-label">Completed</span>
                 <span class="gtd-count" id="completed-count">0</span>
               </div>
@@ -174,13 +175,15 @@
 
     <div id="toast-container" class="toast-container"></div>
 
-    <!-- Load scripts with correct paths -->
+    <!-- Load scripts with correct order -->
     <script src="../utils/events.js"></script>
     <script src="../core/storage/data-store.js"></script>
     <script src="../components/tag-manager.js"></script>
     <script src="../components/item-renderer.js"></script>
     <script src="view-controller.js"></script>
     <script src="../capture/capture.js"></script>
+    <script src="../gtd/gtd-processor.js"></script>
+    <script src="../gtd/gtd-workflow.js"></script>
     <script src="review-controller.js"></script>
     <script src="review.js"></script>
   </body>
