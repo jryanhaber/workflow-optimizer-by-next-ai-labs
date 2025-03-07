@@ -12,21 +12,79 @@
         <div class="filter-controls">
           <div class="filter-buttons">
             <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="todo">Todo</button>
-            <button class="filter-btn" data-filter="inprogress">In Progress</button>
-            <button class="filter-btn" data-filter="waiting">Waiting For</button>
-            <button class="filter-btn" data-filter="completed">Completed</button>
-          </div>
-          <div class="view-toggle">
-            <button id="card-view-btn" class="view-btn active" data-view="card">
-              <span class="icon">◫</span> Cards
+            <button class="filter-btn" data-filter="todo">
+              <span class="status-dot todo-dot"></span>Todo
             </button>
-            <button id="list-view-btn" class="view-btn" data-view="list">
-              <span class="icon">≡</span> List
+            <button class="filter-btn" data-filter="inprogress">
+              <span class="status-dot inprogress-dot"></span>In Progress
+            </button>
+            <button class="filter-btn" data-filter="waiting">
+              <span class="status-dot waiting-dot"></span>Waiting For
+            </button>
+            <button class="filter-btn" data-filter="completed">
+              <span class="status-dot completed-dot"></span>Completed
             </button>
           </div>
           <div class="search-container">
-            <input type="text" id="search-input" placeholder="Search..." />
+            <div class="search-input-wrapper">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="search-input" placeholder="Search..." />
+            </div>
+          </div>
+          <div class="view-toggle">
+            <button id="card-view-btn" class="view-btn active" data-view="card">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              Cards
+            </button>
+            <button id="list-view-btn" class="view-btn" data-view="list">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+              List
+            </button>
           </div>
         </div>
       </header>

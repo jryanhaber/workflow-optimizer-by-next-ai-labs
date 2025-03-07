@@ -356,115 +356,65 @@ async function handleItemAction(action, id, item) {
 // Show item detail in modal
 function showItemDetail(item) {
   var modal = document.getElementById('item-detail-modal');
+  var modalContent = modal.querySelector('.modal-content');
   var modalBody = modal.querySelector('.modal-body');
   var modalTitle = document.getElementById('modal-title');
+
+  // Make modal full screen
+  modalContent.classList.add('fullscreen-modal');
 
   modalTitle.textContent = item.title || 'No Title';
 
   // Build modal content
   var content = document.createElement('div');
+  content.className = 'detail-container';
 
-  // Screenshot section
-  var screenshotDiv = document.createElement('div');
-  screenshotDiv.className = 'detail-screenshot';
-  var img = document.createElement('img');
-  img.src = item.screenshot || '';
-  img.alt = 'Screenshot';
-  screenshotDiv.appendChild(img);
-  content.appendChild(screenshotDiv);
-
-  // Info section
-  var infoDiv = document.createElement('div');
-  infoDiv.className = 'detail-info';
-
-  // URL
-  var urlDiv = document.createElement('div');
-  urlDiv.className = 'detail-url';
-  var urlLink = document.createElement('a');
-  urlLink.href = item.url;
-  urlLink.target = '_blank';
-  urlLink.textContent = item.url;
-  urlDiv.appendChild(urlLink);
-  infoDiv.appendChild(urlDiv);
-
-  // Description
-  var descDiv = document.createElement('div');
-  descDiv.className = 'detail-section';
-  var descLabel = document.createElement('label');
-  descLabel.textContent = 'Description';
-  var textarea = document.createElement('textarea');
-  textarea.id = 'edit-text';
-  textarea.className = 'detail-text';
-  textarea.value = item.text || '';
-  descDiv.appendChild(descLabel);
-  descDiv.appendChild(textarea);
-  infoDiv.appendChild(descDiv);
-
-  // Tags
-  var tagsDiv = document.createElement('div');
-  tagsDiv.className = 'detail-section';
-  var tagsLabel = document.createElement('label');
-  tagsLabel.textContent = 'Tags';
-  var tagContainer = document.createElement('div');
-  tagContainer.id = 'detail-tag-container';
-  tagsDiv.appendChild(tagsLabel);
-  tagsDiv.appendChild(tagContainer);
-  infoDiv.appendChild(tagsDiv);
-
-  // Status
-  var statusDiv = document.createElement('div');
-  statusDiv.className = 'detail-section';
-  var statusLabel = document.createElement('label');
-  statusLabel.textContent = 'Status';
-  var select = document.createElement('select');
-  select.id = 'edit-status';
-
-  var todoOption = document.createElement('option');
-  todoOption.value = 'todo';
-  todoOption.textContent = 'Todo';
-  if (item.type === 'todo') todoOption.selected = true;
-
-  var inProgressOption = document.createElement('option');
-  inProgressOption.value = 'inprogress';
-  inProgressOption.textContent = 'In Progress';
-  if (item.type === 'inprogress') inProgressOption.selected = true;
-
-  var waitingOption = document.createElement('option');
-  waitingOption.value = 'waiting';
-  waitingOption.textContent = 'Waiting For';
-  if (item.type === 'waiting') waitingOption.selected = true;
-
-  var completedOption = document.createElement('option');
-  completedOption.value = 'completed';
-  completedOption.textContent = 'Completed';
-  if (item.type === 'completed') completedOption.selected = true;
-
-  select.appendChild(todoOption);
-  select.appendChild(inProgressOption);
-  select.appendChild(waitingOption);
-  select.appendChild(completedOption);
-
-  statusDiv.appendChild(statusLabel);
-  statusDiv.appendChild(select);
-  infoDiv.appendChild(statusDiv);
-
-  // Metadata
-  var metaDiv = document.createElement('div');
-  metaDiv.className = 'detail-meta';
-
-  var createdDiv = document.createElement('div');
-  createdDiv.textContent =
-    'Created: ' + (item.createdAt ? new Date(item.createdAt).toLocaleString() : 'Unknown');
-
-  var updatedDiv = document.createElement('div');
-  updatedDiv.textContent =
-    'Updated: ' + (item.updatedAt ? new Date(item.updatedAt).toLocaleString() : 'Unknown');
-
-  metaDiv.appendChild(createdDiv);
-  metaDiv.appendChild(updatedDiv);
-  infoDiv.appendChild(metaDiv);
-
-  content.appendChild(infoDiv);
+  // Two-column layout
+  content.innerHTML = `
+    <div class="detail-layout">
+      <div class="detail-left-column">
+        <div class="detail-screenshot">
+          <img src="${item.screenshot || ''}" alt="Screenshot">
+        </div>
+        <div class="detail-url">
+          <a href="${item.url}" target="_blank">${item.url}</a>
+        </div>
+      </div>
+      <div class="detail-right-column">
+        <div class="detail-section">
+          <label for="edit-text">Description</label>
+          <textarea id="edit-text" class="detail-text">${item.text || ''}</textarea>
+        </div>
+        <div class="detail-section">
+          <label>Tags</label>
+          <div id="detail-tag-container"></div>
+        </div>
+        <div class="detail-section">
+          <label for="edit-status">Status</label>
+          <select id="edit-status" class="modern-select">
+            <option value="todo" ${item.type === 'todo' ? 'selected' : ''}>Todo</option>
+            <option value="inprogress" ${
+              item.type === 'inprogress' ? 'selected' : ''
+            }>In Progress</option>
+            <option value="waiting" ${
+              item.type === 'waiting' ? 'selected' : ''
+            }>Waiting For</option>
+            <option value="completed" ${
+              item.type === 'completed' ? 'selected' : ''
+            }>Completed</option>
+          </select>
+        </div>
+        <div class="detail-meta">
+          <div>Created: ${
+            item.createdAt ? new Date(item.createdAt).toLocaleString() : 'Unknown'
+          }</div>
+          <div>Updated: ${
+            item.updatedAt ? new Date(item.updatedAt).toLocaleString() : 'Unknown'
+          }</div>
+        </div>
+      </div>
+    </div>
+  `;
 
   // Actions
   var actionsDiv = document.createElement('div');
@@ -490,6 +440,7 @@ function showItemDetail(item) {
   modalBody.appendChild(content);
 
   // Initialize tag manager
+  var tagContainer = document.getElementById('detail-tag-container');
   var tagManager = new TagManager(tagContainer);
   tagManager.setTags(item.tags || []);
 
@@ -513,11 +464,13 @@ function showItemDetail(item) {
     // Reload items and close modal
     await loadItems();
     modal.classList.add('hidden');
+    modalContent.classList.remove('fullscreen-modal');
   });
 
   // Set up cancel button
   cancelBtn.addEventListener('click', function () {
     modal.classList.add('hidden');
+    modalContent.classList.remove('fullscreen-modal');
   });
 
   // Show the modal
