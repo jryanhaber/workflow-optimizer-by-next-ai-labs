@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Todo Manager",
+  "version": "1.0",
+  "description": "A beautiful todo manager with tagging and sorting capabilities",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["storage"],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
