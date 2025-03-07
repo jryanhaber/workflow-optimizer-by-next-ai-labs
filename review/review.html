@@ -14,7 +14,16 @@
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="todo">Todo</button>
             <button class="filter-btn" data-filter="inprogress">In Progress</button>
+            <button class="filter-btn" data-filter="waiting">Waiting For</button>
             <button class="filter-btn" data-filter="completed">Completed</button>
+          </div>
+          <div class="view-toggle">
+            <button id="card-view-btn" class="view-btn active" data-view="card">
+              <span class="icon">◫</span> Cards
+            </button>
+            <button id="list-view-btn" class="view-btn" data-view="list">
+              <span class="icon">≡</span> List
+            </button>
           </div>
           <div class="search-container">
             <input type="text" id="search-input" placeholder="Search..." />
@@ -56,7 +65,9 @@
       </div>
     </div>
 
-    <script src="../storage/data-store.js"></script>
+    <!-- Load scripts with correct paths -->
+    <script src="../utils/events.js"></script>
+    <script src="../core/storage/data-store.js"></script>
     <script src="../components/tag-manager.js"></script>
     <script src="../components/item-renderer.js"></script>
     <script src="../capture/capture.js"></script>
