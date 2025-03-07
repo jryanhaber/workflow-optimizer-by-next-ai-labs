@@ -1,8 +1,41 @@
 // Enhanced data store with real-time updates
 class DataStore {
   constructor() {
-    // Use window.EventEmitter
-    this.events = typeof window.EventEmitter !== 'undefined' ? new window.EventEmitter() : null;
+    // Check and create EventEmitter if not available
+    if (typeof window.EventEmitter === 'undefined') {
+      console.warn('EventEmitter not found, creating a simple implementation');
+      window.EventEmitter = class SimpleEventEmitter {
+        constructor() {
+          this.events = {};
+        }
+
+        on(event, callback) {
+          if (!this.events[event]) {
+            this.events[event] = [];
+          }
+          this.events[event].push(callback);
+          return () => this.off(event, callback);
+        }
+
+        off(event, callback) {
+          if (!this.events[event]) return;
+          this.events[event] = this.events[event].filter((cb) => cb !== callback);
+        }
+
+        emit(event, ...args) {
+          if (!this.events[event]) return;
+          this.events[event].forEach((callback) => {
+            try {
+              callback(...args);
+            } catch (e) {
+              console.error(`Error in event listener for ${event}:`, e);
+            }
+          });
+        }
+      };
+    }
+
+    this.events = new window.EventEmitter();
     this.ready = Promise.resolve(true);
   }
 
