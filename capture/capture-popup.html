@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Capture Work</title>
+    <link rel="stylesheet" href="../styles/common.css" />
+    <link rel="stylesheet" href="../styles/capture-popup.css" />
+  </head>
+  <body>
+    <div class="capture-container">
+      <h1>Capture Current Page</h1>
+
+      <div class="capture-preview">
+        <div id="screenshot-preview"></div>
+        <div class="page-info">
+          <div id="page-title"></div>
+          <div id="page-url"></div>
+        </div>
+      </div>
+
+      <div class="capture-form">
+        <div class="input-group">
+          <label for="capture-text">Description</label>
+          <input type="text" id="capture-text" placeholder="What is this about?" />
+        </div>
+
+        <div class="input-group">
+          <label>Tags</label>
+          <div id="tag-container"></div>
+        </div>
+
+        <div class="capture-type">
+          <button class="capture-btn todo" data-type="todo">
+            <span class="icon">✓</span>
+            <span class="label">Todo</span>
+          </button>
+          <button class="capture-btn inprogress" data-type="inprogress">
+            <span class="icon">↻</span>
+            <span class="label">In Progress</span>
+          </button>
+          <button class="capture-btn completed" data-type="completed">
+            <span class="icon">✓</span>
+            <span class="label">Completed</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="view-all-btn">View All Items</button>
+      </div>
+    </div>
+
+    <script src="../storage/data-store.js"></script>
+    <script src="../components/tag-manager.js"></script>
+    <script src="../capture/capture.js"></script>
+    <script src="capture-popup.js"></script>
+  </body>
+</html>

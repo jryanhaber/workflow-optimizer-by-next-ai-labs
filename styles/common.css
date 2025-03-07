@@ -1,0 +1,207 @@
+/* Common styles across all extension pages */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #24292e;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+button {
+  cursor: pointer;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.tag-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid #e1e4e8;
+  border-radius: 4px;
+  padding: 4px;
+  background: #fff;
+}
+
+.tag-chips {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag-chip {
+  background: #f1f8ff;
+  border-radius: 12px;
+  padding: 2px 8px;
+  margin: 2px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.tag-remove {
+  margin-left: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tag-input {
+  flex: 1;
+  min-width: 100px;
+  border: none;
+  outline: none;
+  padding: 4px;
+  font-size: 14px;
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #e1e4e8;
+  background: #f6f8fa;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.btn:hover {
+  background: #e1e4e8;
+}
+
+.btn-primary {
+  background: #0366d6;
+  color: white;
+  border-color: #0366d6;
+}
+
+.btn-primary:hover {
+  background: #035fc7;
+}
+
+/* Add this to styles/common.css to override the button styles */
+.capture-btn {
+  background: white !important;
+  border: 1px solid #e1e4e8 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  color: #24292e !important;
+  transition: all 0.2s !important;
+}
+
+.capture-btn.todo {
+  border-left: 4px solid #0366d6 !important;
+}
+
+.capture-btn.inprogress {
+  border-left: 4px solid #f9a825 !important;
+}
+
+.capture-btn.completed {
+  border-left: 4px solid #28a745 !important;
+}
+
+.capture-btn .icon {
+  color: #586069 !important;
+}
+
+.filter-btn {
+  background: white !important;
+  border: 1px solid #e1e4e8 !important;
+  color: #24292e !important;
+}
+
+.filter-btn.active {
+  background: #f6f8fa !important;
+  border-color: #0366d6 !important;
+  border-bottom: 2px solid #0366d6 !important;
+  color: #0366d6 !important;
+}
+
+/* Improved tag styling */
+.tag-chip {
+  background: #f6f8fa !important;
+  border: 1px solid #e1e4e8 !important;
+  border-radius: 4px !important;
+  padding: 2px 6px !important;
+}
+
+.capture-btn {
+  background: white !important;
+  border: 1px solid #e1e4e8 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  color: #24292e !important;
+  transition: all 0.2s !important;
+  padding: 12px 16px !important;
+  border-radius: 6px !important;
+  font-weight: normal !important;
+}
+
+.capture-btn.todo {
+  border-left: 4px solid #0366d6 !important;
+}
+
+.capture-btn.inprogress {
+  border-left: 4px solid #f9a825 !important;
+}
+
+.capture-btn.completed {
+  border-left: 4px solid #28a745 !important;
+}
+
+.filter-btn {
+  background: white !important;
+  border: 1px solid #e1e4e8 !important;
+  color: #24292e !important;
+  font-weight: normal !important;
+  border-radius: 4px !important;
+}
+
+.filter-btn.active {
+  background: #f6f8fa !important;
+  border-color: #0366d6 !important;
+  border-bottom: 2px solid #0366d6 !important;
+  color: #0366d6 !important;
+}
+
+/* Improved tag styling */
+.tag-chip {
+  background: #f6f8fa !important;
+  border: 1px solid #e1e4e8 !important;
+  border-radius: 4px !important;
+  padding: 2px 6px !important;
+  font-size: 12px !important;
+}
+
+/* Fix for empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #586069;
+}
+
+/* Active tag in sidebar */
+.sidebar-tag.active {
+  background: #e9f5ff !important;
+  color: #0366d6 !important;
+  font-weight: 500 !important;
+}

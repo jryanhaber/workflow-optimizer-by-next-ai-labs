@@ -1,13 +1,35 @@
 {
   "manifest_version": 3,
-  "name": "Todo Manager",
+  "name": "WorkflowCapture",
   "version": "1.0",
-  "description": "A beautiful todo manager with tagging and sorting capabilities",
+  "description": "Capture your work state across tabs and projects",
+  "permissions": ["storage", "tabs", "activeTab", "scripting", "notifications"],
+  "host_permissions": ["<all_urls>"],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "capture/capture-popup.html",
+    "default_title": "Capture current tab"
   },
-  "permissions": ["storage"],
   "background": {
     "service_worker": "background.js"
+  },
+  "commands": {
+    "capture-todo": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1"
+      },
+      "description": "Capture as Todo"
+    },
+    "capture-inprogress": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+2"
+      },
+      "description": "Capture as In Progress"
+    },
+    "capture-completed": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+3"
+      },
+      "description": "Capture as Completed"
+    }
   }
 }

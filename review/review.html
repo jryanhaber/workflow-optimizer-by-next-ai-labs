@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Work Items Review</title>
+    <link rel="stylesheet" href="../styles/common.css" />
+    <link rel="stylesheet" href="review.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="app-header">
+        <h1>WorkflowCapture</h1>
+        <div class="filter-controls">
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="todo">Todo</button>
+            <button class="filter-btn" data-filter="inprogress">In Progress</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+          </div>
+          <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search..." />
+          </div>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <div class="sidebar">
+          <div class="sidebar-section">
+            <h2>Tags</h2>
+            <div id="tag-list" class="tag-list"></div>
+          </div>
+          <div class="sidebar-section">
+            <h2>Quick Capture</h2>
+            <button id="capture-current-btn" class="btn btn-primary">Capture This Page</button>
+          </div>
+        </div>
+
+        <div class="items-container">
+          <div id="items-grid" class="items-grid"></div>
+          <div id="empty-state" class="empty-state hidden">
+            <h3>No items found</h3>
+            <p>Capture your first item to get started</p>
+          </div>
+        </div>
+      </main>
+
+      <div id="item-detail-modal" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 id="modal-title">Item Details</h2>
+            <button class="close-btn">&times;</button>
+          </div>
+          <div class="modal-body">
+            <!-- Item details will be inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../storage/data-store.js"></script>
+    <script src="../components/tag-manager.js"></script>
+    <script src="../components/item-renderer.js"></script>
+    <script src="../capture/capture.js"></script>
+    <script src="review.js"></script>
+  </body>
+</html>
