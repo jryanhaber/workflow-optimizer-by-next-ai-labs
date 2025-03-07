@@ -53,7 +53,12 @@ async function initializeCapture() {
           button.textContent = 'Saving...';
 
           // Perform capture
-          await Capture.captureCurrentTab(type, text, tags);
+          if (window.Capture && typeof window.Capture.captureCurrentTab === 'function') {
+            await window.Capture.captureCurrentTab(type, text, tags);
+          } else {
+            console.error('Capture.captureCurrentTab is not available');
+            throw new Error('Capture functionality is not available');
+          }
 
           // Show success message
           button.classList.remove('loading');

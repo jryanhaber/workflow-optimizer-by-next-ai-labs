@@ -1,6 +1,6 @@
 class DataStore {
   constructor() {
-    this.events = typeof EventEmitter !== 'undefined' ? new EventEmitter() : null;
+    this.events = typeof window.EventEmitter !== 'undefined' ? new window.EventEmitter() : null;
   }
 
   on(event, callback) {

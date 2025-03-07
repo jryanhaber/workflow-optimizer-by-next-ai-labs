@@ -3,7 +3,8 @@ import { EventEmitter } from '../utils/events.js';
 
 class DataStore {
   constructor() {
-    this.events = new window.EventEmitter();
+    // Replace with window-based EventEmitter
+    this.events = typeof window.EventEmitter !== 'undefined' ? new window.EventEmitter() : null;
     this.ready = Promise.resolve(true);
   }
 

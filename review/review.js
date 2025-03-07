@@ -97,13 +97,14 @@ function setupModalCloseButton() {
   }
 }
 
-// Set up real-time updates
 function setupRealTimeUpdates() {
-  if (typeof DataStore.on === 'function') {
-    DataStore.on('items-changed', async function () {
+  if (window.DataStore && typeof window.DataStore.on === 'function') {
+    window.DataStore.on('items-changed', async function () {
       await loadItems();
       filterItems();
     });
+  } else {
+    console.warn('Real-time updates not available - DataStore.on method missing');
   }
 }
 
@@ -139,8 +140,13 @@ function setupViewToggle() {
 // Load all items
 async function loadItems() {
   try {
-    allItems = await DataStore.getAllItems();
-    renderItems(allItems);
+    if (window.DataStore && typeof window.DataStore.getAllItems === 'function') {
+      allItems = await window.DataStore.getAllItems();
+      renderItems(allItems);
+    } else {
+      console.error('DataStore.getAllItems is not available');
+      allItems = [];
+    }
   } catch (error) {
     console.error('Failed to load items:', error);
   }
@@ -149,32 +155,36 @@ async function loadItems() {
 // Load tags for sidebar
 async function loadTags() {
   try {
-    var tags = await DataStore.getAllTags();
-    var tagList = document.getElementById('tag-list');
+    if (window.DataStore && typeof window.DataStore.getAllTags === 'function') {
+      var tags = await window.DataStore.getAllTags();
+      var tagList = document.getElementById('tag-list');
 
-    if (!tagList) return;
+      if (!tagList) return;
 
-    if (!tags || tags.length === 0) {
-      tagList.innerHTML = '<div class="empty-tags">No tags yet</div>';
-      return;
-    }
+      if (!tags || tags.length === 0) {
+        tagList.innerHTML = '<div class="empty-tags">No tags yet</div>';
+        return;
+      }
 
-    tagList.innerHTML = '';
-    tags.forEach(function (tag) {
-      var tagEl = document.createElement('div');
-      tagEl.className = 'sidebar-tag';
-      tagEl.textContent = tag;
-      tagEl.addEventListener('click', function () {
-        document.querySelectorAll('.sidebar-tag').forEach(function (t) {
-          t.classList.remove('active');
+      tagList.innerHTML = '';
+      tags.forEach(function (tag) {
+        var tagEl = document.createElement('div');
+        tagEl.className = 'sidebar-tag';
+        tagEl.textContent = tag;
+        tagEl.addEventListener('click', function () {
+          document.querySelectorAll('.sidebar-tag').forEach(function (t) {
+            t.classList.remove('active');
+          });
+          tagEl.classList.add('active');
+
+          // Apply tag filter to items
+          filterItemsByTag(tag);
         });
-        tagEl.classList.add('active');
-
-        // Apply tag filter to items
-        filterItemsByTag(tag);
+        tagList.appendChild(tagEl);
       });
-      tagList.appendChild(tagEl);
-    });
+    } else {
+      console.error('DataStore.getAllTags is not available');
+    }
   } catch (error) {
     console.error('Failed to load tags:', error);
   }
@@ -332,8 +342,12 @@ async function handleItemAction(action, id, item) {
 
     case 'delete':
       if (confirm('Are you sure you want to delete this item?')) {
-        await DataStore.deleteItem(id);
-        await loadItems();
+        if (window.DataStore && typeof window.DataStore.deleteItem === 'function') {
+          await window.DataStore.deleteItem(id);
+          await loadItems();
+        } else {
+          console.error('DataStore.deleteItem is not available');
+        }
       }
       break;
   }
@@ -490,7 +504,11 @@ function showItemDetail(item) {
     });
 
     // Save changes
-    await DataStore.saveItem(updatedItem);
+    if (window.DataStore && typeof window.DataStore.saveItem === 'function') {
+      await window.DataStore.saveItem(updatedItem);
+    } else {
+      console.error('DataStore.saveItem is not available');
+    }
 
     // Reload items and close modal
     await loadItems();

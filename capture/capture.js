@@ -33,7 +33,12 @@ class Capture {
       };
 
       // Save using DataStore
-      await DataStore.saveItem(captureData);
+      if (window.DataStore && typeof window.DataStore.saveItem === 'function') {
+        await window.DataStore.saveItem(captureData);
+      } else {
+        console.error('DataStore.saveItem is not available');
+        throw new Error('DataStore.saveItem is not available');
+      }
 
       return captureData;
     } catch (error) {
