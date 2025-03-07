@@ -92,9 +92,46 @@
       <main class="app-content">
         <div class="sidebar">
           <div class="sidebar-section">
+            <h2>GTD Workflow</h2>
+            <div class="gtd-menu">
+              <div class="gtd-menu-item active" data-gtd-stage="inbox">
+                <span class="gtd-icon">📥</span>
+                <span class="gtd-label">Inbox</span>
+                <span class="gtd-count" id="inbox-count">0</span>
+              </div>
+              <div class="gtd-menu-item" data-gtd-stage="next-actions">
+                <span class="gtd-icon">▶️</span>
+                <span class="gtd-label">Next Actions</span>
+                <span class="gtd-count" id="next-actions-count">0</span>
+              </div>
+              <div class="gtd-menu-item" data-gtd-stage="waiting-for">
+                <span class="gtd-icon">⏱</span>
+                <span class="gtd-label">Waiting For</span>
+                <span class="gtd-count" id="waiting-for-count">0</span>
+              </div>
+              <div class="gtd-menu-item" data-gtd-stage="someday">
+                <span class="gtd-icon">🔮</span>
+                <span class="gtd-label">Someday/Maybe</span>
+                <span class="gtd-count" id="someday-count">0</span>
+              </div>
+              <div class="gtd-menu-item" data-gtd-stage="reference">
+                <span class="gtd-icon">📚</span>
+                <span class="gtd-label">Reference</span>
+                <span class="gtd-count" id="reference-count">0</span>
+              </div>
+              <div class="gtd-menu-item" data-gtd-stage="completed">
+                <span class="gtd-icon">✅</span>
+                <span class="gtd-label">Completed</span>
+                <span class="gtd-count" id="completed-count">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
             <h2>Tags</h2>
             <div id="tag-list" class="tag-list"></div>
           </div>
+
           <div class="sidebar-section">
             <h2>Quick Capture</h2>
             <button id="capture-current-btn" class="btn btn-primary">Capture This Page</button>
@@ -123,11 +160,26 @@
       </div>
     </div>
 
+    <div id="gtd-processing-modal" class="modal hidden">
+      <div class="modal-content gtd-modal">
+        <div class="modal-header">
+          <h2>GTD Processing</h2>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="gtd-processing-content">
+          <!-- Processing steps will be inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
     <!-- Load scripts with correct paths -->
     <script src="../utils/events.js"></script>
-    <script src="../storage/data-store.js"></script>
+    <script src="../core/storage/data-store.js"></script>
     <script src="../components/tag-manager.js"></script>
     <script src="../components/item-renderer.js"></script>
+    <script src="view-controller.js"></script>
     <script src="../capture/capture.js"></script>
     <script src="review.js"></script>
   </body>

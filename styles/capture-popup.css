@@ -156,3 +156,7 @@ h1 {
 #tag-container .tag-input-container {
   padding: 4px;
 }
+
+.capture-btn.waiting {
+  background: #6f42c1;
+}

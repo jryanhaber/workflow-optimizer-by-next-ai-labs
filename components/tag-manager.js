@@ -37,8 +37,8 @@ class TagManager {
    */
   async loadTags() {
     try {
-      if (window?.DataStore && typeof window?.DataStore?.getAllTags === 'function') {
-        this.allTags = await window?.DataStore?.getAllTags();
+      if (window.DataStore && typeof window.DataStore.getAllTags === 'function') {
+        this.allTags = await window.DataStore.getAllTags();
       } else {
         console.log('DataStore.getAllTags not available, using empty tags array');
         this.allTags = [];

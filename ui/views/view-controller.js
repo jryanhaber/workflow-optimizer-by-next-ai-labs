@@ -1,123 +1,220 @@
-// View Controller to manage different view types (card, list)
-import dataStore from '../../core/storage/data-store.js';
-
+// Handle view modes and rendering
 class ViewController {
-  constructor(container) {
-    this.container = container;
-    this.viewMode = localStorage.getItem('preferredView') || 'card';
-    this.items = [];
+  constructor() {
+    this.currentViewMode = localStorage.getItem('preferredView') || 'card';
+  }
 
-    // Set up view toggle buttons if they exist
-    const viewToggle = document.getElementById('view-toggle');
-    if (viewToggle) {
-      viewToggle.addEventListener('click', this.toggleView.bind(this));
+  setupViewToggle() {
+    var cardViewBtn = document.getElementById('card-view-btn');
+    var listViewBtn = document.getElementById('list-view-btn');
+
+    if (!cardViewBtn || !listViewBtn) return;
+
+    if (this.currentViewMode === 'list') {
+      cardViewBtn.classList.remove('active');
+      listViewBtn.classList.add('active');
     }
 
-    // Listen for data changes
-    dataStore.on('items-changed', this.refreshItems.bind(this));
+    cardViewBtn.addEventListener('click', () => {
+      this.currentViewMode = 'card';
+      localStorage.setItem('preferredView', 'card');
+      cardViewBtn.classList.add('active');
+      listViewBtn.classList.remove('active');
+      window.reviewController.renderCurrentItems();
+    });
+
+    listViewBtn.addEventListener('click', () => {
+      this.currentViewMode = 'list';
+      localStorage.setItem('preferredView', 'list');
+      listViewBtn.classList.add('active');
+      cardViewBtn.classList.remove('active');
+      window.reviewController.renderCurrentItems();
+    });
   }
 
-  async init() {
-    await this.loadItems();
-    this.render();
+  getCurrentViewMode() {
+    return this.currentViewMode;
   }
 
-  async loadItems(filters = {}) {
-    this.items = await dataStore.getAllItems(filters);
-    return this.items;
-  }
+  // Create card item with optional process button
+  createCardItem(item, showProcessButton = false, handleItemAction) {
+    // Use ItemRenderer if available, otherwise create a basic card
+    if (window.ItemRenderer && typeof window.ItemRenderer.createItemCard === 'function') {
+      const card = window.ItemRenderer.createItemCard(item, handleItemAction);
 
-  refreshItems(items) {
-    this.items = items;
-    this.render();
-  }
+      // Add process button if this is an inbox view
+      if (showProcessButton && item.gtdStage === 'inbox') {
+        const actionDiv = card.querySelector('.item-actions');
+        if (actionDiv) {
+          const processBtn = document.createElement('button');
+          processBtn.className = 'btn btn-process';
+          processBtn.setAttribute('data-action', 'process');
+          processBtn.setAttribute('data-id', item.id);
+          processBtn.innerHTML = '<span class="process-icon">📋</span> Process';
+          processBtn.addEventListener('click', () =>
+            window.reviewController.processInboxItem(item)
+          );
+          actionDiv.prepend(processBtn);
+        }
+      }
 
-  toggleView() {
-    this.viewMode = this.viewMode === 'card' ? 'list' : 'card';
-    localStorage.setItem('preferredView', this.viewMode);
-    this.render();
-  }
-
-  render() {
-    if (!this.container) return;
-
-    // Clear container
-    this.container.innerHTML = '';
-
-    if (this.items.length === 0) {
-      this.renderEmptyState();
-      return;
-    }
-
-    // Render appropriate view
-    if (this.viewMode === 'list') {
-      this.renderListView();
+      return card;
     } else {
-      this.renderCardView();
+      // Fallback card creation logic
+      const card = document.createElement('div');
+      card.className = `item-card ${item.type}-type`;
+      card.setAttribute('data-id', item.id);
+
+      // Basic card structure
+      card.innerHTML = `
+        <div class="item-screenshot">
+          <img src="${item.screenshot || ''}" alt="Screenshot">
+        </div>
+        <div class="item-details">
+          <div class="item-header">
+            <span class="status-badge ${item.type}">${this.getStatusLabel(item.type)}</span>
+            <h3 class="item-title">${this.truncateText(item.title, 50)}</h3>
+          </div>
+          <p class="item-text">${item.text || 'No description'}</p>
+          <div class="item-meta">
+            <div class="item-tags">${this.renderTagChips(item.tags)}</div>
+            <div class="item-date">${new Date(item.createdAt).toLocaleString()}</div>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-open" data-action="open" data-id="${item.id}">Open URL</button>
+            <button class="btn btn-edit" data-action="edit" data-id="${item.id}">Edit</button>
+            <button class="btn btn-delete" data-action="delete" data-id="${item.id}">Delete</button>
+          </div>
+        </div>
+      `;
+
+      // Add event listeners
+      const actionButtons = card.querySelectorAll('.item-actions button');
+      actionButtons.forEach((button) => {
+        button.addEventListener('click', (e) => {
+          const action = button.getAttribute('data-action');
+          const id = parseInt(button.getAttribute('data-id'));
+          handleItemAction(action, id, item);
+        });
+      });
+
+      return card;
     }
   }
 
-  renderCardView() {
-    const grid = document.createElement('div');
-    grid.className = 'items-grid';
-
-    this.items.forEach((item) => {
-      const card = this.createCardElement(item);
-      grid.appendChild(card);
-    });
-
-    this.container.appendChild(grid);
-  }
-
-  renderListView() {
-    const list = document.createElement('div');
-    list.className = 'items-list';
-
-    this.items.forEach((item) => {
-      const listItem = this.createListElement(item);
-      list.appendChild(listItem);
-    });
-
-    this.container.appendChild(list);
-  }
-
-  // Create a card element for the grid view
-  createCardElement(item) {
-    // Implementation of card creation...
-  }
-
-  // Create a list item for the list view
-  createListElement(item) {
-    const listItem = document.createElement('div');
-    listItem.className = `list-item ${item.type}-type`;
+  // Create list item with optional process button
+  createListItem(item, showProcessButton = false, handleItemAction) {
+    var listItem = document.createElement('div');
+    listItem.className = 'list-item ' + (item.type || 'todo') + '-type';
     listItem.setAttribute('data-id', item.id);
 
-    // Create a compact version with small thumbnail
-    listItem.innerHTML = `
-      <div class="item-thumbnail">
-        <img src="${item.screenshot}" alt="">
-      </div>
-      <div class="item-summary">
-        <div class="item-title">${item.title}</div>
-        <div class="item-text">${item.text || 'No description'}</div>
-      </div>
-      <div class="item-meta">
-        <div class="item-type">${item.type}</div>
-        <div class="item-tags">${this.renderTagBadges(item.tags)}</div>
-      </div>
-      <div class="item-actions">
-        <button class="btn-action" data-action="open">Open</button>
-        <button class="btn-action" data-action="edit">Edit</button>
-      </div>
-    `;
+    var truncatedTitle =
+      item.title && item.title.length > 60
+        ? item.title.substring(0, 60) + '...'
+        : item.title || 'No title';
 
-    // Add event listeners
-    this.attachItemEventListeners(listItem, item);
+    var tagChipsHtml = '';
+    if (item.tags && Array.isArray(item.tags)) {
+      tagChipsHtml = item.tags
+        .map(function (tag) {
+          return '<span class="tag-chip">' + tag + '</span>';
+        })
+        .join('');
+    }
+
+    var dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Unknown date';
+    var itemText = item.text || 'No description';
+
+    // Process button for inbox items
+    var processButtonHtml = '';
+    if (showProcessButton && item.gtdStage === 'inbox') {
+      processButtonHtml = `<button class="btn-action btn-process" data-action="process" data-id="${item.id}">Process</button>`;
+    }
+
+    // Build HTML
+    listItem.innerHTML =
+      '<div class="item-thumbnail">' +
+      '  <img src="' +
+      (item.screenshot || '') +
+      '" alt="">' +
+      '</div>' +
+      '<div class="item-summary">' +
+      '  <div class="item-title">' +
+      truncatedTitle +
+      '</div>' +
+      '  <div class="item-text">' +
+      itemText +
+      '</div>' +
+      '</div>' +
+      '<div class="item-meta">' +
+      '  <div class="item-tags">' +
+      tagChipsHtml +
+      '</div>' +
+      '  <div class="item-date">' +
+      dateStr +
+      '</div>' +
+      '</div>' +
+      '<div class="item-actions">' +
+      processButtonHtml +
+      '  <button class="btn-action" data-action="open" data-id="' +
+      item.id +
+      '">Open</button>' +
+      '  <button class="btn-action" data-action="edit" data-id="' +
+      item.id +
+      '">Edit</button>' +
+      '  <button class="btn-action" data-action="delete" data-id="' +
+      item.id +
+      '">×</button>' +
+      '</div>';
+
+    // Add click listeners
+    var buttons = listItem.querySelectorAll('.btn-action');
+    for (var i = 0; i < buttons.length; i++) {
+      (function (button) {
+        button.addEventListener('click', function (e) {
+          var action = button.getAttribute('data-action');
+          var id = parseInt(button.getAttribute('data-id'), 10);
+
+          if (action === 'process') {
+            window.reviewController.processInboxItem(item);
+          } else {
+            handleItemAction(action, id, item);
+          }
+        });
+      })(buttons[i]);
+    }
 
     return listItem;
   }
 
-  // Other helper methods...
+  getStatusLabel(type) {
+    switch (type) {
+      case 'todo':
+        return 'To Do';
+      case 'inprogress':
+        return 'In Progress';
+      case 'waiting':
+        return 'Waiting For';
+      case 'completed':
+        return 'Completed';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  renderTagChips(tags) {
+    if (!tags || tags.length === 0) {
+      return '<span class="no-tags">No tags</span>';
+    }
+    return tags.map((tag) => `<span class="tag-chip">${tag}</span>`).join('');
+  }
+
+  truncateText(text, maxLength = 100) {
+    if (!text || text.length <= maxLength) return text;
+    return text.substr(0, maxLength) + '...';
+  }
 }
 
-export default ViewController;
+// Create global instance
+window.viewController = new ViewController();
+a;

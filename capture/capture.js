@@ -26,21 +26,24 @@ class Capture {
         screenshot: screenshotUrl,
         tags: tags,
         systemTags: [`status:${captureType}`],
+        gtdStage: captureType === 'completed' ? 'completed' : 'inbox',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         reviewedAt: null,
         nextAction: null
       };
 
-      // Save using DataStore
+      console.log('Saving capture data:', captureData);
+
+      // Save using window.DataStore
       if (window.DataStore && typeof window.DataStore.saveItem === 'function') {
         await window.DataStore.saveItem(captureData);
+        console.log('Item saved successfully');
+        return captureData;
       } else {
         console.error('DataStore.saveItem is not available');
         throw new Error('DataStore.saveItem is not available');
       }
-
-      return captureData;
     } catch (error) {
       console.error('Capture failed:', error);
       throw error;

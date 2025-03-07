@@ -34,6 +34,9 @@ async function initializeCapture() {
       <button class="capture-btn inprogress" data-type="inprogress">
         In Progress
       </button>
+       <button class="capture-btn waiting" data-type="waiting">
+    Waiting For
+  </button>
       <button class="capture-btn completed" data-type="completed">
         Completed
       </button>

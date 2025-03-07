@@ -1,9 +1,7 @@
 // Enhanced data store with real-time updates
-import { EventEmitter } from '../utils/events.js';
-
 class DataStore {
   constructor() {
-    // Replace with window-based EventEmitter
+    // Use window.EventEmitter
     this.events = typeof window.EventEmitter !== 'undefined' ? new window.EventEmitter() : null;
     this.ready = Promise.resolve(true);
   }
@@ -19,7 +17,10 @@ class DataStore {
   }
 
   on(event, callback) {
-    return this.events.on(event, callback);
+    if (this.events) {
+      return this.events.on(event, callback);
+    }
+    return null;
   }
 
   /**
@@ -58,22 +59,6 @@ class DataStore {
         });
       }
 
-      // Inside saveItem method before saving to storage
-      // Add GTD status if not present
-      if (!item.gtdStage) {
-        // Assign GTD stage based on type
-        switch (item.type) {
-          case 'completed':
-            item.gtdStage = 'completed';
-            break;
-          case 'waiting':
-            item.gtdStage = 'waiting-for';
-            break;
-          default:
-            item.gtdStage = 'inbox';
-        }
-      }
-
       // Add system tags if not present
       item.systemTags = item.systemTags || [];
       if (!item.systemTags.includes(`gtd:${item.gtdStage}`)) {
@@ -84,7 +69,9 @@ class DataStore {
       await chrome.storage.local.set({ capturedItems: items });
 
       // Emit change event for real-time updates
-      this.emit('items-changed', items);
+      if (this.events) {
+        this.events.emit('items-changed', items);
+      }
 
       return true;
     } catch (error) {
@@ -128,7 +115,56 @@ class DataStore {
     }
   }
 
-  // Additional methods...
+  /**
+   * Delete an item by ID
+   * @param {number} id - Item ID to delete
+   */
+  async deleteItem(id) {
+    try {
+      const result = await chrome.storage.local.get('capturedItems');
+      const items = result.capturedItems || [];
+
+      const newItems = items.filter((item) => item.id !== id);
+
+      await chrome.storage.local.set({ capturedItems: newItems });
+
+      // Emit change event
+      if (this.events) {
+        this.events.emit('items-changed', newItems);
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Delete failed:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get all unique tags from all items
+   */
+  async getAllTags() {
+    try {
+      const items = await this.getAllItems();
+
+      // Collect all tags
+      const tagSet = new Set();
+
+      items.forEach((item) => {
+        if (item.tags && Array.isArray(item.tags)) {
+          item.tags.forEach((tag) => {
+            if (tag) tagSet.add(tag);
+          });
+        }
+      });
+
+      return Array.from(tagSet);
+    } catch (error) {
+      console.error('Tag retrieval failed:', error);
+      return [];
+    }
+  }
 }
+
 // Create singleton instance
 window.DataStore = new DataStore();

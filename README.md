@@ -81,28 +81,37 @@ API Integration: Create hooks for connecting with external systems
 Each of these areas has clear deliverables and requirements that build on each other to create a comprehensive workflow capture and management system.To fix the current issues, we should focus first on implementing the basic events system and fixing the review.js file to properly handle the list view toggle.
 
 todo-extension/
-│
-├── core/ # Core features everyone would use
-│ ├── capture/ # Screen/state capture
-│ ├── storage/ # Data persistence
-│ ├── components/ # Reusable UI components
-│ ├── views/ # Different view modes (card, list, etc)
-│ └── workflow/ # Base workflow engine
-│
-├── gtd/ # GTD-specific implementation
-│ ├── stages/ # Each GTD stage logic
-│ ├── processors/ # Stage transition processors
-│ └── components/ # GTD-specific UI components
-│
-├── custom/ # Your business-specific features
-│ ├── nextai/ # NextAI specific workflows
-│ └── completion-flow/ # Your custom completion workflow
-│
-├── gpt/ # GPT integration
-│ ├── prompt-templates/ # Templates for different analysis types
-│ └── processors/ # Text processing with GPT
-│
-└── ui/ # Main UI framework
-├── dashboard/ # Dashboard views
-├── review/ # Review interfaces
-└── settings/ # Configuration options
+├── core/
+│ └── storage/
+│ ├── data-store.js (MODIFY - fix import issues)
+│ └── models.js
+├── capture/
+│ ├── capture-popup.html (MODIFY - fix script references)
+│ ├── capture-popup.js
+│ └── capture.js (MODIFY - fix DataStore references)
+├── components/
+│ ├── item-renderer.js
+│ └── tag-manager.js (MODIFY - fix DataStore references)
+├── gtd/
+│ ├── gtd-processor.js (CREATE NEW)
+│ └── gtd-workflow.js
+├── review/
+│ ├── review.html (MODIFY - add script references)
+│ ├── review.js (MODIFY - simplify)
+│ ├── review.css (MODIFY - add tag selection styles)
+│ ├── review-controller.js (CREATE NEW)
+│ └── view-controller.js (CREATE NEW)
+├── storage/
+│ └── data-store.js (DELETE - conflicting with core/storage/data-store.js)
+├── styles/
+│ ├── capture-popup.css
+│ └── common.css
+├── ui/
+│ ├── dashboard/
+│ │ └── dashboard.js
+│ └── views/
+│ └── view-controller.js (DELETE - will be replaced by review/view-controller.js)
+├── utils/
+│ └── events.js (MODIFY - fix to use window.EventEmitter)
+├── background.js
+└── manifest.json
