@@ -94,3 +94,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 });
+
+<script src="../ui/views/view-controller.js"></script>;

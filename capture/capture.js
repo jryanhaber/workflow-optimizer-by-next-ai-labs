@@ -38,7 +38,13 @@ class Capture {
       // Add direct fallback - use the chrome.storage API directly if DataStore fails
       try {
         if (window.DataStore && typeof window.DataStore.saveItem === 'function') {
-          await window.DataStore.saveItem(captureData);
+          if (window.DataStore && typeof window.DataStore.saveItem === 'function') {
+            await window.DataStore.saveItem(captureData);
+            console.log('Item saved successfully via DataStore');
+          } else {
+            console.error('DataStore object:', window.DataStore);
+            throw new Error('DataStore.saveItem is not available');
+          }
           console.log('Item saved successfully via DataStore');
           return captureData;
         } else {

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
   <head>
     <title>Capture Work</title>
@@ -61,7 +62,8 @@
     <script src="../components/tag-manager.js"></script>
     <script src="../capture/capture.js"></script>
     <script src="capture-popup.js"></script>
-
+    <script src="capture-test-btn.js"></script>
+    <script src="capture-logger.js"></script>
     <div style="margin-top: 16px; text-align: center">
       <button
         id="test-datastore-btn"
@@ -70,57 +72,5 @@
         Test DataStore
       </button>
     </div>
-
-    <script>
-      // Add a test button to debug DataStore
-      document.getElementById('test-datastore-btn').addEventListener('click', function () {
-        console.clear();
-        console.log('Testing DataStore...');
-
-        // Check if DataStore exists
-        console.log('DataStore exists:', !!window.DataStore);
-
-        // Check if specific methods exist
-        if (window.DataStore) {
-          console.log('saveItem method exists:', typeof window.DataStore.saveItem === 'function');
-          console.log(
-            'getAllItems method exists:',
-            typeof window.DataStore.getAllItems === 'function'
-          );
-          console.log('on method exists:', typeof window.DataStore.on === 'function');
-
-          // Try to execute a method
-          if (typeof window.DataStore.getAllItems === 'function') {
-            console.log('Trying to call getAllItems...');
-            window.DataStore.getAllItems()
-              .then((items) => console.log('Items retrieved:', items))
-              .catch((err) => console.error('Error getting items:', err));
-          }
-        }
-
-        // List all scripts that have been loaded
-        console.log('Loaded scripts:');
-        document.querySelectorAll('script').forEach((script, i) => {
-          console.log(`${i + 1}. ${script.src || 'inline script'}`);
-        });
-
-        alert('DataStore test complete - check console for results');
-      });
-    </script>
   </body>
 </html>
-
-<script>
-  console.log('Starting script loading');
-
-  // Define a console logger to track DataStore initialization
-  (function () {
-    const originalConsoleLog = console.log;
-    console.log = function (...args) {
-      if (args[0] === 'DataStore initialized') {
-        console.trace('DataStore initialization stack trace');
-      }
-      originalConsoleLog.apply(console, args);
-    };
-  })();
-</script>

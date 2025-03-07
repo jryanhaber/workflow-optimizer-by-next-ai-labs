@@ -81,37 +81,37 @@ API Integration: Create hooks for connecting with external systems
 Each of these areas has clear deliverables and requirements that build on each other to create a comprehensive workflow capture and management system.To fix the current issues, we should focus first on implementing the basic events system and fixing the review.js file to properly handle the list view toggle.
 
 todo-extension/
-├── core/
-│ └── storage/
-│ ├── data-store.js (MODIFY - fix import issues)
-│ └── models.js
+├── background.js
 ├── capture/
-│ ├── capture-popup.html (MODIFY - fix script references)
+│ ├── capture-popup.html
 │ ├── capture-popup.js
-│ └── capture.js (MODIFY - fix DataStore references)
+│ └── capture.js
 ├── components/
 │ ├── item-renderer.js
-│ └── tag-manager.js (MODIFY - fix DataStore references)
+│ └── tag-manager.js
+├── core/storage/
+│ ├── data-store.js
+│ └── models.js
+├── custom/nextai/
+│ └── completion-flow.js
+├── gpt/
+│ └── analyzer.js
 ├── gtd/
-│ ├── gtd-processor.js (CREATE NEW)
+│ ├── gtd-processor.js
 │ └── gtd-workflow.js
 ├── review/
-│ ├── review.html (MODIFY - add script references)
-│ ├── review.js (MODIFY - simplify)
-│ ├── review.css (MODIFY - add tag selection styles)
-│ ├── review-controller.js (CREATE NEW)
-│ └── view-controller.js (CREATE NEW)
-├── storage/
-│ └── data-store.js (DELETE - conflicting with core/storage/data-store.js)
+│ ├── review-controller.js
+│ ├── review.css
+│ ├── review.html
+│ └── review.js
 ├── styles/
-│ ├── capture-popup.css
-│ └── common.css
+│ └── styles.css
+├── tests/
 ├── ui/
 │ ├── dashboard/
 │ │ └── dashboard.js
 │ └── views/
-│ └── view-controller.js (DELETE - will be replaced by review/view-controller.js)
+│ └── view-controller.js
 ├── utils/
-│ └── events.js (MODIFY - fix to use window.EventEmitter)
-├── background.js
+│ └── events.js
 └── manifest.json

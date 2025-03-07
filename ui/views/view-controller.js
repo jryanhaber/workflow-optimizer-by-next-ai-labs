@@ -135,4 +135,4 @@ class ViewController {
 
 // Create and expose the global instance
 window.viewController = new ViewController();
-console.log('ViewCcontroller global instance created');
+console.log('ViewController global instance created');
