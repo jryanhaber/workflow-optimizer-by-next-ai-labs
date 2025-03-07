@@ -217,4 +217,3 @@ class ViewController {
 
 // Create global instance
 window.viewController = new ViewController();
-a;
