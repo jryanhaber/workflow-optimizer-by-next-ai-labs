@@ -35,14 +35,24 @@ class Capture {
 
       console.log('Saving capture data:', captureData);
 
-      // Save using window.DataStore
-      if (window.DataStore && typeof window.DataStore.saveItem === 'function') {
-        await window.DataStore.saveItem(captureData);
-        console.log('Item saved successfully');
+      // Add direct fallback - use the chrome.storage API directly if DataStore fails
+      try {
+        if (window.DataStore && typeof window.DataStore.saveItem === 'function') {
+          await window.DataStore.saveItem(captureData);
+          console.log('Item saved successfully via DataStore');
+          return captureData;
+        } else {
+          throw new Error('DataStore.saveItem not available, using fallback');
+        }
+      } catch (storeError) {
+        console.warn('Using storage fallback:', storeError.message);
+        // Fallback to direct chrome.storage
+        const result = await chrome.storage.local.get('capturedItems');
+        const items = result.capturedItems || [];
+        items.push(captureData);
+        await chrome.storage.local.set({ capturedItems: items });
+        console.log('Item saved via direct storage API');
         return captureData;
-      } else {
-        console.error('DataStore.saveItem is not available');
-        throw new Error('DataStore.saveItem is not available');
       }
     } catch (error) {
       console.error('Capture failed:', error);
@@ -53,3 +63,6 @@ class Capture {
 
 // Export the class
 window.Capture = Capture;
+
+// Perform immediate initialization check
+console.log('Capture module loaded, DataStore available:', !!window.DataStore);

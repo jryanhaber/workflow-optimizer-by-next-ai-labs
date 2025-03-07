@@ -190,4 +190,25 @@ class DataStore {
 }
 
 // Create singleton instance
-window.DataStore = new DataStore();
+(function () {
+  try {
+    if (!window.DataStore) {
+      window.DataStore = new DataStore();
+      console.log('DataStore initialized');
+
+      // Expose a direct test method
+      window.checkDataStore = function () {
+        console.log(
+          'DataStore check:',
+          window.DataStore ? 'exists' : 'missing',
+          window.DataStore && typeof window.DataStore.saveItem === 'function'
+            ? 'saveItem available'
+            : 'saveItem missing'
+        );
+        return window.DataStore;
+      };
+    }
+  } catch (e) {
+    console.error('Error initializing DataStore:', e);
+  }
+})();

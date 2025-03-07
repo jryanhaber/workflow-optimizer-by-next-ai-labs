@@ -11,43 +11,72 @@ document.addEventListener('DOMContentLoaded', function () {
     console.error('DataStore not found! Check that core/storage/data-store.js is loaded.');
   }
 
-  // Check for view controller
-  if (!window.viewController) {
-    console.error('View controller not found! Check that view-controller.js is loaded.');
+  // Set up view toggle if available
+  if (window.viewController && typeof window.viewController.setupViewToggle === 'function') {
+    console.log('Setting up view toggle...');
+    window.viewController.setupViewToggle();
+  } else {
+    console.error('View controller not found or missing setupViewToggle method!');
+    console.log('Creating minimal view controller...');
 
-    // Create a simple view controller to avoid errors
+    // Create minimal view controller to avoid errors
     window.viewController = {
       setupViewToggle: function () {
-        console.log('Using fallback view toggle setup');
+        console.log('Minimal view toggle setup');
+        const cardViewBtn = document.getElementById('card-view-btn');
+        const listViewBtn = document.getElementById('list-view-btn');
+
+        if (cardViewBtn && listViewBtn) {
+          const currentView = localStorage.getItem('preferredView') || 'card';
+
+          if (currentView === 'list') {
+            cardViewBtn.classList.remove('active');
+            listViewBtn.classList.add('active');
+          } else {
+            cardViewBtn.classList.add('active');
+            listViewBtn.classList.remove('active');
+          }
+
+          cardViewBtn.addEventListener('click', function () {
+            localStorage.setItem('preferredView', 'card');
+            cardViewBtn.classList.add('active');
+            listViewBtn.classList.remove('active');
+            location.reload();
+          });
+
+          listViewBtn.addEventListener('click', function () {
+            localStorage.setItem('preferredView', 'list');
+            listViewBtn.classList.add('active');
+            cardViewBtn.classList.remove('active');
+            location.reload();
+          });
+        }
       },
       getCurrentViewMode: function () {
         return localStorage.getItem('preferredView') || 'card';
-      },
-      createCardItem: function (item) {
-        const card = document.createElement('div');
-        card.className = 'item-card';
-        card.innerHTML = `<div>${item.title || 'No title'}</div>`;
-        return card;
-      },
-      createListItem: function (item) {
-        const listItem = document.createElement('div');
-        listItem.className = 'list-item';
-        listItem.innerHTML = `<div>${item.title || 'No title'}</div>`;
-        return listItem;
       }
     };
+
+    window.viewController.setupViewToggle();
   }
 
   // Initialize the review controller
-  if (window.reviewController) {
+  if (window.reviewController && typeof window.reviewController.initialize === 'function') {
     console.log('Review controller found, initializing...');
-    window.reviewController.initialize();
+    try {
+      window.reviewController.initialize();
+    } catch (e) {
+      console.error('Error initializing review controller:', e);
+      showErrorMessage('Failed to initialize review page: ' + e.message);
+    }
   } else {
     console.error(
       'Review controller not found! Make sure review-controller.js is loaded before review.js.'
     );
+    showErrorMessage('Error: Review controller not found');
+  }
 
-    // Create error notification in UI
+  function showErrorMessage(message) {
     const container = document.querySelector('.app-container');
     if (container) {
       const errorNotice = document.createElement('div');
@@ -57,8 +86,8 @@ document.addEventListener('DOMContentLoaded', function () {
       errorNotice.style.margin = '15px';
       errorNotice.style.borderRadius = '5px';
       errorNotice.innerHTML = `
-        <h3>Error: Review Controller Not Found</h3>
-        <p>The review controller component couldn't be loaded. This may be due to script loading errors.</p>
+        <h3>Error</h3>
+        <p>${message}</p>
         <p>Please check the console for more details.</p>
       `;
       container.prepend(errorNotice);
