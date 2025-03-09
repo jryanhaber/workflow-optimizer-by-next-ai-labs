@@ -157,8 +157,8 @@ function addDebugButton() {
   debugBtn.style.right = '5px';
   debugBtn.style.fontSize = '10px';
   debugBtn.style.padding = '2px 5px';
-  debugBtn.style.backgroundColor = '#eee';
-  debugBtn.style.border = '1px solid #ccc';
+  debugBtn.style.backgroundColor = 'white';
+  debugBtn.style.border = '.5px solid lightgray';
 
   debugBtn.addEventListener('click', () => {
     // Log diagnostic info
