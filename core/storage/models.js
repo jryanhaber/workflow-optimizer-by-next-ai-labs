@@ -29,17 +29,29 @@
 // Export constants for system use
 window.GTD_STAGES = {
   INBOX: 'inbox',
-  ACTIONABLE: 'actionable',
   NEXT_ACTIONS: 'next-actions',
   WAITING_FOR: 'waiting-for',
+  TO_DELEGATE: 'to-delegate',
+  DELEGATED: 'delegated',
+  BRAINSTORM: 'brainstorm',
   SOMEDAY: 'someday',
   REFERENCE: 'reference',
   COMPLETED: 'completed'
 };
 
-window.ITEM_TYPES = {
-  TODO: 'todo',
-  IN_PROGRESS: 'inprogress',
-  COMPLETED: 'completed',
-  WAITING: 'waiting'
+window.STATUS_TO_GTD_STAGE = {
+  todo: 'inbox',
+  inprogress: 'next-actions',
+  waiting: 'waiting-for',
+  completed: 'completed'
+};
+
+// Add filter matching to ensure sync between filters and categories
+window.GTD_FILTER_MAPPING = {
+  inbox: 'todo',
+  'next-actions': 'inprogress',
+  'waiting-for': 'waiting',
+  'to-delegate': 'waiting',
+  delegated: 'waiting',
+  completed: 'completed'
 };

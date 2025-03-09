@@ -96,21 +96,51 @@
         <div class="sidebar">
           <div class="sidebar-section">
             <h2>GTD Workflow</h2>
+            <!-- After in review/review.html -->
             <div class="gtd-menu">
               <div class="gtd-menu-item active" data-gtd-stage="inbox">
                 <span class="gtd-icon">I</span>
                 <span class="gtd-label">Inbox</span>
                 <span class="gtd-count" id="inbox-count">0</span>
+                <button
+                  class="process-inbox-btn"
+                  id="process-inbox-btn"
+                  title="Process all inbox items"
+                >
+                  Process
+                </button>
               </div>
               <div class="gtd-menu-item" data-gtd-stage="next-actions">
                 <span class="gtd-icon">N</span>
                 <span class="gtd-label">Next Actions</span>
                 <span class="gtd-count" id="next-actions-count">0</span>
+                <button
+                  class="massive-action-btn"
+                  id="massive-action-btn"
+                  title="Take massive action on next actions"
+                >
+                  Action
+                </button>
               </div>
               <div class="gtd-menu-item" data-gtd-stage="waiting-for">
                 <span class="gtd-icon">W</span>
                 <span class="gtd-label">Waiting For</span>
                 <span class="gtd-count" id="waiting-for-count">0</span>
+              </div>
+              <div class="gtd-menu-item" data-gtd-stage="to-delegate">
+                <span class="gtd-icon">D</span>
+                <span class="gtd-label">To Delegate</span>
+                <span class="gtd-count" id="to-delegate-count">0</span>
+              </div>
+              <div class="gtd-menu-item" data-gtd-stage="delegated">
+                <span class="gtd-icon">DL</span>
+                <span class="gtd-label">Delegated</span>
+                <span class="gtd-count" id="delegated-count">0</span>
+              </div>
+              <div class="gtd-menu-item" data-gtd-stage="brainstorm">
+                <span class="gtd-icon">B</span>
+                <span class="gtd-label">Brainstorm</span>
+                <span class="gtd-count" id="brainstorm-count">0</span>
               </div>
               <div class="gtd-menu-item" data-gtd-stage="someday">
                 <span class="gtd-icon">S</span>
