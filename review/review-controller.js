@@ -3,7 +3,9 @@
  */
 class ReviewController {
   constructor() {
-    this.currentFilter = 'all';
+    // Get saved filter from localStorage or default to 'all'
+    this.currentFilter = localStorage.getItem('currentFilter') || 'all';
+    this.currentGtdStage = localStorage.getItem('currentGtdStage') || 'inbox';
     this.currentView = localStorage.getItem('preferredView') || 'card';
     this.allItems = [];
     this.filteredItems = [];
@@ -35,6 +37,22 @@ class ReviewController {
     }
   }
 
+  async processInbox() {
+    // Get all inbox items
+    const inboxItems = this.allItems.filter((item) => {
+      const itemStage = item.gtdStage || 'inbox';
+      return itemStage === 'inbox';
+    });
+
+    if (inboxItems.length === 0) {
+      this.showToast('No inbox items to process', 'info');
+      return;
+    }
+
+    // Create a fullscreen process view
+    this.showProcessInboxView(inboxItems);
+  }
+
   setupEventListeners() {
     // Set up filter buttons
     const filterButtons = document.querySelectorAll('.filter-btn');
@@ -49,6 +67,22 @@ class ReviewController {
         this.applyFilters();
       });
     });
+    const processInboxBtn = document.getElementById('process-inbox-btn');
+    if (processInboxBtn) {
+      processInboxBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent triggering the parent GTD menu item
+        this.processInbox();
+      });
+    }
+
+    // Massive Action button
+    const massiveActionBtn = document.getElementById('massive-action-btn');
+    if (massiveActionBtn) {
+      massiveActionBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent triggering the parent GTD menu item
+        this.startMassiveAction();
+      });
+    }
 
     // Set up view toggle buttons
     const cardViewBtn = document.getElementById('card-view-btn');
@@ -166,6 +200,9 @@ class ReviewController {
       );
     }
 
+    // Save current filter to localStorage
+    localStorage.setItem('currentFilter', this.currentFilter);
+
     // Update filtered items and render
     this.filteredItems = filtered;
     this.renderItems(filtered);
@@ -177,6 +214,10 @@ class ReviewController {
       const itemStage = item.gtdStage || 'inbox';
       return itemStage === stage;
     });
+
+    // Save current GTD stage to localStorage
+    this.currentGtdStage = stage;
+    localStorage.setItem('currentGtdStage', stage);
 
     this.filteredItems = filtered;
     this.renderItems(filtered);
